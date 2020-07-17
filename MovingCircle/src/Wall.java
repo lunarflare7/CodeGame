@@ -12,12 +12,21 @@ public class Wall {
 		double y = 0;
 		x = playerPos[0];
 		y = playerPos[1];
+		boolean[] collisionBool;
+		collisionBool = data.GetCollisionBool();
 		for(int i = 0; i < data.GetNumOfWalls(); i++) {
 			if(x < wallData[scanx1] + wallData[scanx2] - 2 &&
 				x > wallData[scanx1] - 39 &&
 				y < wallData[scany1] + wallData[scany2] - 2 &&
 				y > wallData[scany1] - 39) {
 				moveTo[2] = 1;
+			}
+			if(!collisionBool[i] && 
+					x < wallData[scanx1] + wallData[scanx2] - 2 &&
+					x > wallData[scanx1] - 39 &&
+					y < wallData[scany1] + wallData[scany2] - 2 &&
+					y > wallData[scany1] - 39) {
+				moveTo[2] = 2;
 			}
 			scany1 += 4;
 			scany2 += 4;

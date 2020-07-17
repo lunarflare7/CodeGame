@@ -1,3 +1,4 @@
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
@@ -25,7 +26,13 @@ public class MyPanel extends JPanel implements KeyListener, ActionListener{
 		addKeyListener(this);
 		setFocusable(true);
 		setFocusTraversalKeysEnabled(false);
-		levelData = Levels.Level1();
+		levelData = Levels.Level0();
+		MoveCircle.button.addActionListener(new ActionListener() {
+			@Override
+            public void actionPerformed(ActionEvent e) {
+				levelData = Levels.Level1();
+			}
+		});
 	}
 
 	@Override
@@ -52,6 +59,15 @@ public class MyPanel extends JPanel implements KeyListener, ActionListener{
 		if(collision[2] == 1) {
 			y = collision[1];
 			x = collision[0];
+		}
+		if(collision[2] == 2) {
+			if(data.GetLevelNum() == 1) {
+				levelData = Levels.Level2();
+			}
+			else if(data.GetLevelNum() == 2) {
+				levelData = Levels.Level1();
+			}
+			collision[2] = 0;
 		}
 	}
 	public void up() {
@@ -93,7 +109,7 @@ public class MyPanel extends JPanel implements KeyListener, ActionListener{
 		if(code == KeyEvent.VK_1) {
 			levelData = Levels.Level1();
 		}
-		}
+	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
@@ -115,10 +131,22 @@ public class MyPanel extends JPanel implements KeyListener, ActionListener{
 		int scan0 = 0, scan1 = 1, scan2 = 2, scan3 = 3;
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
-		g2.fill(new Ellipse2D.Double(x,y,40,40));
-			
+		if(data.GetLevelNum() == 0) {
+			g2.setFont(new Font("TimesRoman", Font.BOLD, 200)); 
+			g2.drawString("Boxie Boi", 90, 400);
+		}
+		if (data.GetLevelNum() > 0) {
+			g2.fill(new Ellipse2D.Double(x,y,40,40));
+		}
+		g2.setFont(new Font("TimesRoman", Font.LAYOUT_LEFT_TO_RIGHT, 20)); 
 		for (int i = 0; i < data.GetNumOfWalls(); i++){
 			g2.fill(new Rectangle2D.Double(levelData[scan0],levelData[scan1],levelData[scan2],levelData[scan3]));
+			if (!data.GetCollisionBool()[i]) {
+				int x = (int) (levelData[scan0]) - 10;
+				int y = (int) (levelData[scan1]) - 10;
+				int toLevel = (int) (data.GetLevelNum() + 1);
+				g2.drawString("Level " + toLevel, x, y);
+			}
 			scan0 += 4;
 			scan1 += 4;
 			scan2 += 4;
